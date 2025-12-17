@@ -39,12 +39,12 @@
     <div id="root">
         <div class="min-h-screen flex flex-col items-center justify-center bg-white">
             <div class="w-12 h-12 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin mb-4"></div>
-            <p class="text-slate-400 font-bold animate-pulse uppercase tracking-[0.2em] text-[10px]">Cargando Conocimiento Científico...</p>
+            <p class="text-slate-400 font-bold animate-pulse uppercase tracking-[0.2em] text-[10px]">Actualizando Repositorio Científico...</p>
         </div>
     </div>
 
     <script type="text/babel" data-type="module" data-presets="react,typescript">
-        import React, { useState, useMemo, useEffect } from 'react';
+        import React, { useState, useMemo } from 'react';
         import ReactDOM from 'react-dom/client';
         import { GoogleGenAI, Type } from "@google/genai";
 
@@ -73,47 +73,58 @@
 
         const GLOBAL_SUPPLEMENTS = [
             // --- VITAMINAS ---
-            { id: 'vit-c-liposomal', name: 'Vitamina C (Liposomal)', description: 'Forma de alta biodisponibilidad para evitar irritación gástrica y maximizar absorción.', category: CategoryId.ANTIOXIDANTS, goals: ['Inmunidad', 'Colágeno', 'Antioxidante'], positiveEffects: ['Protección celular', 'Síntesis de colágeno', 'Reduce duración de resfriados'], sideEffects: ['Altas dosis pueden causar acidez'], minDose: '500mg', idealDose: '1000mg-2000mg', timing: 'Mañana' },
-            { id: 'vit-b12-methyl', name: 'Vitamina B12 (Metilcobalamina)', description: 'Forma activa de B12 crucial para el sistema nervioso y formación de glóbulos rojos.', category: CategoryId.METABOLISM, goals: ['Energía', 'Ánimo', 'Sistema Nervioso'], positiveEffects: ['Mejora fatiga mental', 'Soporte neuronal', 'Metabolismo de homocisteína'], sideEffects: ['Generalmente nulos'], minDose: '500mcg', idealDose: '1000mcg-2500mcg', timing: 'Mañana' },
-            { id: 'vit-d3-k2-high', name: 'Vitamina D3 + K2 (MK-7)', description: 'Sinergia esencial para la absorción de calcio en los huesos y no en las arterias.', category: CategoryId.IMMUNITY, goals: ['Inmunidad', 'Huesos', 'Hormonas'], positiveEffects: ['Modulación inmune', 'Densidad ósea', 'Salud cardiovascular'], sideEffects: ['Exceso puede elevar calcio en sangre'], minDose: '2000 UI', idealDose: '5000 UI', timing: 'Con comida grasa' },
-            
+            { id: 'vit-a', name: 'Vitamina A (Retinol)', description: 'Crucial para la visión, inmunidad y diferenciación celular.', category: CategoryId.IMMUNITY, goals: ['Visión', 'Piel', 'Inmunidad'], positiveEffects: ['Salud ocular', 'Regeneración epitelial', 'Función inmune'], sideEffects: ['Toxicidad en exceso (liposoluble)'], minDose: '700mcg', idealDose: '900mcg', timing: 'Con comida' },
+            { id: 'vit-b1', name: 'Vitamina B1 (Tiamina)', description: 'Esencial para el metabolismo de carbohidratos y función nerviosa.', category: CategoryId.METABOLISM, goals: ['Energía', 'Sistema Nervioso'], positiveEffects: ['Producción de ATP', 'Transmisión nerviosa'], sideEffects: ['Seguro'], minDose: '1.2mg', idealDose: '50-100mg (biohacking)', timing: 'Mañana' },
+            { id: 'vit-b3-flush', name: 'Vitamina B3 (Niacina)', description: 'Mejora perfiles lipídicos y es precursor de NAD+.', category: CategoryId.REJUVENATION, goals: ['Lípidos', 'NAD+', 'Energía'], positiveEffects: ['Aumento HDL', 'Reparación de ADN', 'Salud cardiovascular'], sideEffects: ['Efecto Flush (enrojecimiento)'], minDose: '16mg', idealDose: '250mg-500mg', timing: 'Con comida' },
+            { id: 'vit-b6-p5p', name: 'Vitamina B6 (P-5-P)', description: 'Forma coenzimática para síntesis de neurotransmisores.', category: CategoryId.NOOTROPICS, goals: ['Ánimo', 'Sueño', 'Hormonas'], positiveEffects: ['Síntesis de serotonina/dopamina', 'Control de homocisteína'], sideEffects: ['Neuropatía sensorial en dosis extremas'], minDose: '1.7mg', idealDose: '20-50mg', timing: 'Mañana' },
+            { id: 'vit-b9-folate', name: 'Vitamina B9 (Metilfolato)', description: 'Fundamental para la metilación y síntesis de ADN.', category: CategoryId.REJUVENATION, goals: ['Metilación', 'ADN', 'Ánimo'], positiveEffects: ['Soporte al ciclo de metilación', 'Salud fetal', 'Prevención anemia'], sideEffects: ['Puede enmascarar deficiencia de B12'], minDose: '400mcg', idealDose: '400-800mcg', timing: 'Mañana' },
+            { id: 'vit-b12-methyl', name: 'Vitamina B12 (Metilcobalamina)', description: 'Forma activa para el sistema nervioso y glóbulos rojos.', category: CategoryId.METABOLISM, goals: ['Energía', 'Neuroprotección', 'Sangre'], positiveEffects: ['Reduce fatiga', 'Mantenimiento de vainas de mielina'], sideEffects: ['Seguro'], minDose: '2.4mcg', idealDose: '1000mcg', timing: 'Mañana' },
+            { id: 'vit-c-liposomal', name: 'Vitamina C (Liposomal)', description: 'Alta biodisponibilidad, antioxidante maestro.', category: CategoryId.ANTIOXIDANTS, goals: ['Colágeno', 'Defensas', 'Estrés'], positiveEffects: ['Inmunidad fortalecida', 'Piel joven', 'Reducción de cortisol'], sideEffects: ['Diarrea osmótica'], minDose: '500mg', idealDose: '1000-2000mg', timing: 'Repartido' },
+            { id: 'vit-d3-k2', name: 'Vitamina D3 + K2 (MK-7)', description: 'Hormona y vitamina sinérgicas para calcio y hormonas.', category: CategoryId.IMMUNITY, goals: ['Hormonas', 'Huesos', 'Testosterona'], positiveEffects: ['Salud ósea', 'Optimización hormonal', 'Antiviral'], sideEffects: ['Hipercalcemia (raro)'], minDose: '2000 UI', idealDose: '5000 UI', timing: 'Con grasas' },
+            { id: 'vit-e-tocotrienols', name: 'Vitamina E (Tocotrienoles)', description: 'Forma superior de Vitamina E con mayor poder antioxidante.', category: CategoryId.ANTIOXIDANTS, goals: ['Piel', 'Colesterol', 'Hígado'], positiveEffects: ['Protección contra peroxidación lipídica', 'Salud hepática'], sideEffects: ['Adelgazamiento de sangre'], minDose: '15mg', idealDose: '100-200mg', timing: 'Con comida' },
+
             // --- MINERALES ---
-            { id: 'magnesium-threonate', name: 'Magnesio L-Treonato', description: 'Única forma de magnesio capaz de cruzar eficientemente la barrera hematoencefálica.', category: CategoryId.NOOTROPICS, goals: ['Memoria', 'Sueño', 'Ansiedad'], positiveEffects: ['Aumenta densidad sináptica', 'Mejora aprendizaje', 'Reduce estrés'], sideEffects: ['Ligera somnolencia'], minDose: '1000mg', idealDose: '2000mg (equivalente a 144mg magnesio elemental)', timing: 'Noche' },
-            { id: 'zinc-picolinate', name: 'Zinc (Picolinato)', description: 'Mineral traza esencial para más de 300 enzimas corporales.', category: CategoryId.IMMUNITY, goals: ['Inmunidad', 'Testosterona', 'Piel'], positiveEffects: ['Producción de testosterona', 'Cicatrización', 'Resistencia a virus'], sideEffects: ['Náuseas si se toma solo'], minDose: '15mg', idealDose: '30-50mg', timing: 'Con comida' },
-            { id: 'selenium-sel', name: 'Selenio (L-Selenometionina)', description: 'Potente antioxidante necesario para la función tiroidea.', category: CategoryId.METABOLISM, goals: ['Tiroides', 'Antioxidante', 'Metabolismo'], positiveEffects: ['Optimiza T3/T4', 'Previene daño oxidativo', 'Salud prostática'], sideEffects: ['Toxicidad en dosis muy altas (>400mcg)'], minDose: '50mcg', idealDose: '200mcg', timing: 'Cualquier momento' },
-            
-            // --- ADAPTÓGENOS & NOOTRÓPICOS ---
-            { id: 'rhodiola-rosea', name: 'Rhodiola Rosea (3% Rosavinas)', description: 'Adaptógeno que combate la fatiga por estrés y mejora el rendimiento mental.', category: CategoryId.NOOTROPICS, goals: ['Ánimo', 'Estrés', 'Fatiga'], positiveEffects: ['Reduce fatiga por agotamiento (burnout)', 'Mejora el estado de ánimo', 'Aumenta resistencia física'], sideEffects: ['Posible irritabilidad'], minDose: '200mg', idealDose: '400-600mg', timing: 'Mañana' },
-            { id: 'bacopa-bac', name: 'Bacopa Monnieri', description: 'Hierba ayurvédica para la memoria a largo plazo.', category: CategoryId.NOOTROPICS, goals: ['Memoria', 'Retención', 'Ansiedad'], positiveEffects: ['Mejora velocidad de procesamiento visual', 'Neuroprotector', 'Reduce ansiedad'], sideEffects: ['Malestar estomacal leve'], minDose: '300mg', idealDose: '450mg', timing: 'Con comida' },
-            { id: 'lions-mane-pro', name: 'Hongo Melena de León', description: 'Estimula el Factor de Crecimiento Nervioso (NGF).', category: CategoryId.NOOTROPICS, goals: ['Neurogénesis', 'Enfoque', 'Memoria'], positiveEffects: ['Reparación de vainas de mielina', 'Mayor enfoque mental', 'Reduce depresión leve'], sideEffects: ['Poco comunes'], minDose: '500mg', idealDose: '1000mg', timing: 'Mañana' },
-            { id: 'l-theanine-zen', name: 'L-Teanina', description: 'Aminoácido relajante presente en el té verde.', category: CategoryId.NOOTROPICS, goals: ['Ánimo', 'Calma', 'Foco'], positiveEffects: ['Promueve ondas alfa', 'Reduce efectos nerviosos de la cafeína', 'Relajación sin sedación'], sideEffects: ['Ninguno conocido'], minDose: '100mg', idealDose: '200mg', timing: 'Con café o antes de dormir' },
-            
-            // --- BIOHACKING & REJUVENECIMIENTO ---
-            { id: 'nmn-pro-max', name: 'NMN (Uthever)', description: 'Precursor directo de NAD+ para la reparación celular.', category: CategoryId.REJUVENATION, goals: ['Longevidad', 'Energía', 'NAD+'], positiveEffects: ['Activa sirtuinas', 'Mejora metabolismo de glucosa', 'Repara ADN'], sideEffects: ['Leve enrojecimiento facial'], minDose: '250mg', idealDose: '500mg-1000mg', timing: 'Ayunas' },
-            { id: 'resveratrol-trans-pure', name: 'Trans-Resveratrol', description: 'Polifenol que mimetiza la restricción calórica.', category: CategoryId.REJUVENATION, goals: ['Longevidad', 'Corazón', 'Inflamación'], positiveEffects: ['Activación de SIRT1', 'Neuroprotección', 'Antienvejecimiento arterial'], sideEffects: ['Interacción con anticoagulantes'], minDose: '250mg', idealDose: '500mg', timing: 'Con yogur o grasas' },
-            { id: 'pqq-mito', name: 'PQQ (Pirroloquinolina quinona)', description: 'Promueve la biogénesis mitocondrial (creación de nuevas mitocondrias).', category: CategoryId.REJUVENATION, goals: ['Mitocondria', 'Energía', 'Cerebro'], positiveEffects: ['Aumenta densidad mitocondrial', 'Soporte cognitivo', 'Energía vital'], sideEffects: ['Seguro'], minDose: '10mg', idealDose: '20mg', timing: 'Mañana' },
-            { id: 'fisetin-senolitic', name: 'Fisetina', description: 'El senolítico natural más potente identificado hasta la fecha.', category: CategoryId.REJUVENATION, goals: ['Senescencia', 'Longevidad', 'Inflamación'], positiveEffects: ['Elimina células zombies (senescentes)', 'Reduce inflamación sistémica', 'Protección neuronal'], sideEffects: ['Poca data a dosis masivas'], minDose: '100mg', idealDose: 'Variado (Protocolo Mayo: 1g-2g/día por 2 días al mes)', timing: 'Con comida' },
+            { id: 'magnesium-glycinate', name: 'Magnesio (Glicinato)', description: 'Unión de magnesio y glicina para máxima relajación.', category: CategoryId.NOOTROPICS, goals: ['Sueño', 'Relajación', 'Ánimo'], positiveEffects: ['Calidad de sueño profunda', 'Reduce ansiedad', 'Calmante'], sideEffects: ['Efecto laxante leve'], minDose: '200mg', idealDose: '400mg', timing: 'Noche' },
+            { id: 'magnesium-threonate', name: 'Magnesio (L-Treonato)', description: 'Especializado en cruzar la barrera cerebral.', category: CategoryId.NOOTROPICS, goals: ['Memoria', 'Cognición', 'Neuroplasticidad'], positiveEffects: ['Mejora aprendizaje', 'Neuroprotector'], sideEffects: ['Somnolencia leve'], minDose: '1000mg', idealDose: '2000mg', timing: 'Noche' },
+            { id: 'zinc-picolinate', name: 'Zinc (Picolinato)', description: 'Esencial para testosterona e inmunidad celular.', category: CategoryId.HORMONAL_MEN, goals: ['Testosterona', 'Inmunidad', 'Piel'], positiveEffects: ['Más testosterona', 'Recuperación rápida'], sideEffects: ['Náuseas si se toma solo'], minDose: '15mg', idealDose: '30-50mg', timing: 'Con comida' },
+            { id: 'selenium-meth', name: 'Selenio (Selenometionina)', description: 'Vital para la tiroides y protección antioxidante.', category: CategoryId.METABOLISM, goals: ['Tiroides', 'Inmunidad'], positiveEffects: ['Producción de T3', 'Defensa celular'], sideEffects: ['Toxicidad por acumulación'], minDose: '55mcg', idealDose: '200mcg', timing: 'Cualquier momento' },
+            { id: 'iodine-lugol', name: 'Yodo (Solución Lugol/Kelp)', description: 'Mineral base para las hormonas tiroideas.', category: CategoryId.METABOLISM, goals: ['Tiroides', 'Metabolismo'], positiveEffects: ['Energía basal', 'Salud mamaria'], sideEffects: ['Puede gatillar autoinmunidad'], minDose: '150mcg', idealDose: '150-500mcg', timing: 'Mañana' },
+            { id: 'iron-bisglycinate', name: 'Hierro (Bisglicinato)', description: 'Forma suave de hierro para transporte de oxígeno.', category: CategoryId.PHYSICAL_PERFORMANCE, goals: ['Energía', 'Resistencia', 'Sangre'], positiveEffects: ['Combate anemia', 'Rendimiento físico'], sideEffects: ['Estreñimiento'], minDose: '8mg', idealDose: '18-45mg (según ferritina)', timing: 'Ayunas o con Vit C' },
+            { id: 'boron-glycinate', name: 'Boro (Glicinato)', description: 'Mineral que libera testosterona y mejora huesos.', category: CategoryId.HORMONAL_MEN, goals: ['Testosterona Libre', 'Inflamación'], positiveEffects: ['Baja SHBG', 'Soporte articular'], sideEffects: ['Interrupción hormonal si se abusa'], minDose: '3mg', idealDose: '6-10mg', timing: 'Mañana' },
+            { id: 'chromium-picolinate', name: 'Cromo (Picolinato)', description: 'Mejora la sensibilidad a la insulina significativamente.', category: CategoryId.METABOLISM, goals: ['Insulina', 'Antojos', 'Peso'], positiveEffects: ['Control glucémico', 'Reduce antojos de azúcar'], sideEffects: ['Generalmente seguro'], minDose: '200mcg', idealDose: '600mcg', timing: 'Con carbohidratos' },
 
-            // --- HORMONALES HOMBRE ---
-            { id: 'tongkat-ali-pro', name: 'Tongkat Ali (Extracto 200:1)', description: 'Potenciador de testosterona libre líder en biohacking.', category: CategoryId.HORMONAL_MEN, goals: ['Testosterona', 'Libido', 'Fuerza'], positiveEffects: ['Reduce SHBG', 'Aumenta deseo sexual', 'Mejor composición corporal'], sideEffects: ['Posible insomnio si se toma tarde'], minDose: '200mg', idealDose: '400mg', timing: 'Mañana' },
-            { id: 'fadogia-agrestis-pro', name: 'Fadogia Agrestis', description: 'Hierba africana que mimetiza la hormona LH.', category: CategoryId.HORMONAL_MEN, goals: ['Testosterona', 'Fuerza', 'Masa Muscular'], positiveEffects: ['Aumento producción natural', 'Rápida respuesta hormonal'], sideEffects: ['Posible toxicidad renal en dosis extremas'], minDose: '300mg', idealDose: '600mg', timing: 'Ciclar: 2 semanas on / 1 off' },
-            { id: 'boron-gly-pro', name: 'Boro (Glicinato)', description: 'Mineral crítico para la liberación de testosterona libre.', category: CategoryId.HORMONAL_MEN, goals: ['Testosterona Libre', 'Huesos', 'Inflamación'], positiveEffects: ['Reduce estradiol y SHBG', 'Fuerte soporte óseo'], sideEffects: ['Nulos'], minDose: '3mg', idealDose: '9-12mg', timing: 'Mañana' },
+            // --- ADAPTÓGENOS Y HIERBAS ---
+            { id: 'ashwagandha-ksm66', name: 'Ashwagandha (KSM-66)', description: 'Adaptógeno clínico que reduce el cortisol drásticamente.', category: CategoryId.NOOTROPICS, goals: ['Estrés', 'Cortisol', 'Ansiedad'], positiveEffects: ['Calma profunda', 'Mejor testosterona', 'Resiliencia'], sideEffects: ['Anhedonia potencial'], minDose: '300mg', idealDose: '600mg', timing: 'Noche' },
+            { id: 'rhodiola-rosea-pro', name: 'Rhodiola Rosea (3% Rosavinas)', description: 'Energía mental y resistencia a la fatiga.', category: CategoryId.NOOTROPICS, goals: ['Fatiga', 'Enfoque', 'Ánimo'], positiveEffects: ['Alerta sin ansiedad', 'Rendimiento laboral'], sideEffects: ['Estimulación excesiva'], minDose: '200mg', idealDose: '400mg', timing: 'Mañana' },
+            { id: 'bacopa-monnieri-pro', name: 'Bacopa Monnieri', description: 'Mejora la memoria y procesamiento de información.', category: CategoryId.NOOTROPICS, goals: ['Memoria', 'Aprendizaje'], positiveEffects: ['Retención de datos', 'Calma mental'], sideEffects: ['Fatiga inicial'], minDose: '300mg', idealDose: '450mg', timing: 'Con comida' },
+            { id: 'ginseng-panax', name: 'Panax Ginseng (Gingenósidos)', description: 'Revitalizante físico y mental milenario.', category: CategoryId.PHYSICAL_PERFORMANCE, goals: ['Energía', 'Erección', 'Libido'], positiveEffects: ['Vigor sexual', 'Fuerza física'], sideEffects: ['Presión alta'], minDose: '200mg', idealDose: '500mg', timing: 'Mañana' },
+            { id: 'maca-black', name: 'Maca Negra (Gelatinizada)', description: 'Superalimento andino para libido y esperma.', category: CategoryId.HORMONAL_MEN, goals: ['Libido', 'Fertilidad', 'Energía'], positiveEffects: ['Deseo sexual', 'Mejor ánimo'], sideEffects: ['Alteración digestiva'], minDose: '1g', idealDose: '3-5g', timing: 'Mañana' },
+            { id: 'vitex-agnus-castus', name: 'Vitex (Sauzgatillo)', description: 'Regulador de progesterona para mujeres.', category: CategoryId.HORMONAL_WOMEN, goals: ['PMS', 'Fertilidad', 'Menopausia'], positiveEffects: ['Ciclo regular', 'Equilibrio hormonal'], sideEffects: ['Dolor de cabeza'], minDose: '200mg', idealDose: '400mg', timing: 'Ayunas' },
+            { id: 'myo-inositol-pro', name: 'Myo-Inositol', description: 'Tratamiento de elección para SOP.', category: CategoryId.HORMONAL_WOMEN, goals: ['SOP', 'Insulina', 'Ánimo'], positiveEffects: ['Sensibilidad a insulina', 'Ovulación regular'], sideEffects: ['Gases'], minDose: '2000mg', idealDose: '4000mg', timing: 'Repartido' },
 
-            // --- HORMONALES MUJER ---
-            { id: 'myo-inositol-women', name: 'Myo-Inositol', description: 'Tratamiento fundamental para SOP y sensibilidad a insulina.', category: CategoryId.HORMONAL_WOMEN, goals: ['SOP', 'Ánimo', 'Insulina'], positiveEffects: ['Regulación del ciclo', 'Mejora calidad de óvulos', 'Reduce ansiedad'], sideEffects: ['Diarrea inicial'], minDose: '2000mg', idealDose: '4000mg', timing: 'Con comidas' },
-            { id: 'vitex-chaste', name: 'Vitex (Chasteberry)', description: 'Regulador natural de la prolactina y progesterona.', category: CategoryId.HORMONAL_WOMEN, goals: ['PMS', 'Menopausia', 'Acné'], positiveEffects: ['Reduce síntomas de SPM', 'Regula periodos', 'Reduce acné hormonal'], sideEffects: ['Dolor de cabeza'], minDose: '200mg', idealDose: '400mg', timing: 'Ayunas' },
-            
-            // --- ANTIOXIDANTES ---
-            { id: 'nac-glutathione', name: 'NAC (N-Acetil Cisteína)', description: 'Precursor del glutatión y desintoxicante hepático.', category: CategoryId.ANTIOXIDANTS, goals: ['Glutatión', 'Hígado', 'Inmunidad'], positiveEffects: ['Aumenta antioxidantes maestros', 'Protección pulmonar', 'Apoyo cognitivo'], sideEffects: ['Olor azufrado'], minDose: '600mg', idealDose: '1200mg-1800mg', timing: 'Ayunas o comida' },
-            { id: 'astaxanthin-pro', name: 'Astaxantina (Natural)', description: 'El antioxidante más potente del mar (6000x más que Vit C).', category: CategoryId.ANTIOXIDANTS, goals: ['Piel', 'Ojos', 'Inflamación'], positiveEffects: ['Fotoprotección oral', 'Salud ocular', 'Resistencia muscular'], sideEffects: ['Tinte anaranjado en piel'], minDose: '4mg', idealDose: '12mg', timing: 'Con grasas' },
+            // --- HONGOS MEDICINALES (FUNGI) ---
+            { id: 'lions-mane-dual-ext', name: 'Melena de León', description: 'Hongos para la neurogénesis vía NGF.', category: CategoryId.NOOTROPICS, goals: ['Cerebro', 'Foco', 'Memoria'], positiveEffects: ['Neuroplasticidad', 'Claridad mental'], sideEffects: ['Posible alergia'], minDose: '500mg', idealDose: '1000mg', timing: 'Mañana' },
+            { id: 'cordyceps-militaris', name: 'Cordyceps Militaris', description: 'Hongo que aumenta el uso de oxígeno y ATP.', category: CategoryId.PHYSICAL_PERFORMANCE, goals: ['Resistencia', 'Libido', 'Pulmones'], positiveEffects: ['Más energía aeróbica', 'Vigor'], sideEffects: ['Sed leve'], minDose: '500mg', idealDose: '1000mg', timing: 'Pre-entreno' },
+            { id: 'reishi-spore-oil', name: 'Reishi (Ganoderma)', description: 'El hongo de la inmortalidad y relajación.', category: CategoryId.IMMUNITY, goals: ['Inmunidad', 'Sueño', 'Longevidad'], positiveEffects: ['Paz mental', 'Inmunomodulación'], sideEffects: ['Adelgaza la sangre'], minDose: '500mg', idealDose: '1000mg', timing: 'Noche' },
 
-            // --- RENDIMIENTO FÍSICO ---
-            { id: 'creatine-mono-pure', name: 'Creatina Monohidrato', description: 'El suplemento con más evidencia del mundo para fuerza.', category: CategoryId.PHYSICAL_PERFORMANCE, goals: ['Fuerza', 'Cerebro', 'Energía'], positiveEffects: ['Aumento de ATP', 'Recuperación muscular', 'Protección neuronal'], sideEffects: ['Retención hídrica leve'], minDose: '3g', idealDose: '5g diarios', timing: 'Cualquier momento' },
-            { id: 'beta-alanine-endurance', name: 'Beta-Alanina', description: 'Amortiguador de ácido láctico.', category: CategoryId.PHYSICAL_PERFORMANCE, goals: ['Resistencia', 'Hipertrofia'], positiveEffects: ['Más repeticiones', 'Retrasa fatiga muscular'], sideEffects: ['Parestesia (picazón inocua)'], minDose: '2g', idealDose: '3.2g-6.4g', timing: 'Antes de entrenar' },
+            // --- LONGEVIDAD Y BIOHACKING AVANZADO ---
+            { id: 'nmn-pro-99', name: 'NMN (Mononucleótido de Nicotinamida)', description: 'Precursor estrella de NAD+.', category: CategoryId.REJUVENATION, goals: ['Longevidad', 'NAD+', 'Energía'], positiveEffects: ['Reparación celular', 'Vitalidad'], sideEffects: ['Sensibilidad gástrica'], minDose: '250mg', idealDose: '500-1000mg', timing: 'Mañana' },
+            { id: 'resveratrol-micronized', name: 'Resveratrol', description: 'Activador de sirtuinas para mimetizar ayuno.', category: CategoryId.REJUVENATION, goals: ['Longevidad', 'Corazón'], positiveEffects: ['Antienvejecimiento', 'Salud arterial'], sideEffects: ['Interacción con fármacos'], minDose: '250mg', idealDose: '500-1000mg', timing: 'Con grasas' },
+            { id: 'spermidine-trihydro', name: 'Espermidina', description: 'Inductor de autofagia celular.', category: CategoryId.REJUVENATION, goals: ['Autofagia', 'Longevidad', 'Piel'], positiveEffects: ['Limpieza celular', 'Mejor cabello'], sideEffects: ['Seguro'], minDose: '1mg', idealDose: '5-10mg', timing: 'Noche' },
+            { id: 'fisetin-bio', name: 'Fisetina', description: 'Senolítico potente que elimina células dañadas.', category: CategoryId.REJUVENATION, goals: ['Células Senescentes', 'Longevidad'], positiveEffects: ['Reducción de inflamación', 'Claridad'], sideEffects: ['Poca data a largo plazo'], minDose: '100mg', idealDose: '1000mg (protocolo cíclico)', timing: 'Con comida' },
+            { id: 'quercetin-phytosome-pro', name: 'Quercetina Fitosomada', description: 'Antioxidante y ionóforo de zinc.', category: CategoryId.IMMUNITY, goals: ['Inmunidad', 'Alergias', 'Longevidad'], positiveEffects: ['Mejora entrada de zinc', 'Antihistamínico'], sideEffects: ['Fatiga'], minDose: '250mg', idealDose: '500mg', timing: 'Con comida' },
+            { id: 'pqq-mitopure', name: 'PQQ', description: 'Biogénesis mitocondrial (crea nuevas mitocondrias).', category: CategoryId.REJUVENATION, goals: ['Energía', 'Mitocondria', 'Cerebro'], positiveEffects: ['Claridad mental', 'Resistencia'], sideEffects: ['Seguro'], minDose: '10mg', idealDose: '20mg', timing: 'Mañana' },
+            { id: 'coq10-ubiquinol-pro', name: 'Ubiquinol (CoQ10)', description: 'Energía mitocondrial para el corazón.', category: CategoryId.ANTIOXIDANTS, goals: ['Corazón', 'Energía', 'Fertilidad'], positiveEffects: ['Salud cardiaca', 'Vigor'], sideEffects: ['Insomnio si se toma tarde'], minDose: '100mg', idealDose: '200-400mg', timing: 'Mañana/Con grasa' },
 
-            // --- METABOLISMO ---
-            { id: 'berberine-hcl-ampk', name: 'Berberina HCl', description: 'Activador de AMPK para control de glucosa.', category: CategoryId.METABOLISM, goals: ['Insulina', 'Peso', 'Longevidad'], positiveEffects: ['Equivalente a metformina', 'Pérdida de grasa visceral', 'Reduce colesterol'], sideEffects: ['Gases, estreñimiento'], minDose: '500mg', idealDose: '1500mg (500x3)', timing: '15 min antes de comidas' },
-            { id: 'ala-r-type', name: 'Ácido Alfa Lipoico (R-ALA)', description: 'Antioxidante metabólico universal.', category: CategoryId.METABOLISM, goals: ['Nervios', 'Insulina', 'Energía'], positiveEffects: ['Mejora neuropatía', 'Sensibiliza insulina', 'Energía celular'], sideEffects: ['Olor en orina'], minDose: '300mg', idealDose: '600mg', timing: 'Ayunas' }
+            // --- RENDIMIENTO Y AMINOÁCIDOS ---
+            { id: 'creatine-monohydrate-pro', name: 'Creatina Monohidrato', description: 'Soporte ATP para fuerza y cerebro.', category: CategoryId.PHYSICAL_PERFORMANCE, goals: ['Fuerza', 'Memoria', 'ATP'], positiveEffects: ['Masa muscular', 'Foco'], sideEffects: ['Retención de agua'], minDose: '3g', idealDose: '5g', timing: 'Cualquier momento' },
+            { id: 'beta-alanine-pro', name: 'Beta-Alanina', description: 'Amortiguador de ácido láctico.', category: CategoryId.PHYSICAL_PERFORMANCE, goals: ['Resistencia', 'Volumen'], positiveEffects: ['Más repeticiones', 'Retrasa fatiga'], sideEffects: ['Picazón (parestesia)'], minDose: '2g', idealDose: '3.2g', timing: 'Pre-entreno' },
+            { id: 'l-citrulline-malate-pro', name: 'Citrulina Malato', description: 'Precursor de óxido nítrico.', category: CategoryId.PHYSICAL_PERFORMANCE, goals: ['Vasodilatación', 'Erección', 'Pump'], positiveEffects: ['Mejor flujo', 'Menos fatiga'], sideEffects: ['Acidez'], minDose: '4g', idealDose: '8g', timing: '45 min antes' },
+            { id: 'taurine-pure', name: 'Taurina', description: 'Aminoácido osmolito y calmante.', category: CategoryId.PHYSICAL_PERFORMANCE, goals: ['Corazón', 'Calma', 'Hidratación'], positiveEffects: ['Recuperación', 'GABAérgico'], sideEffects: ['Seguro'], minDose: '1g', idealDose: '2-3g', timing: 'Pre-entreno o noche' },
+            { id: 'l-tyrosine-focus', name: 'L-Tirosina', description: 'Precursor de dopamina y noradrenalina.', category: CategoryId.NOOTROPICS, goals: ['Enfoque', 'Estrés', 'Motivación'], positiveEffects: ['Resistencia al estrés mental', 'Foco'], sideEffects: ['Dolor de cabeza'], minDose: '500mg', idealDose: '1000-2000mg', timing: 'Ayunas' },
+            { id: 'nac-600-pro', name: 'NAC (N-Acetil-Cisteína)', description: 'Precursor del glutatión.', category: CategoryId.ANTIOXIDANTS, goals: ['Glutatión', 'Hígado', 'Moco'], positiveEffects: ['Desintoxicación', 'Salud pulmonar'], sideEffects: ['Olor azufrado'], minDose: '600mg', idealDose: '1200mg', timing: 'Cualquier momento' },
+            { id: 'alpha-lipoic-acid-r', name: 'Ácido Alfa Lipoico (R-ALA)', description: 'Antioxidante universal para glucosa.', category: CategoryId.METABOLISM, goals: ['Insulina', 'Nervios'], positiveEffects: ['Sensibilidad insulina', 'Antioxidante'], sideEffects: ['Olor orina'], minDose: '300mg', idealDose: '600mg', timing: 'Ayunas' },
+            { id: 'berberine-hcl-pro', name: 'Berberina HCl', description: 'Mimetiza la metformina, activa AMPK.', category: CategoryId.METABOLISM, goals: ['Peso', 'Azúcar', 'Longevidad'], positiveEffects: ['Control glucosa', 'Quema grasa'], sideEffects: ['Molestia GI'], minDose: '500mg', idealDose: '1500mg', timing: 'Antes de comidas' }
         ];
 
         // --- COMPONENTES ---
@@ -124,7 +135,6 @@
             const [generatedStack, setGeneratedStack] = useState(null);
             const [stackLoading, setStackLoading] = useState(false);
 
-            // Filtrado Maestro Inteligente
             const filtered = useMemo(() => {
                 const query = search.toLowerCase().trim();
                 return GLOBAL_SUPPLEMENTS.filter(s => {
@@ -144,27 +154,22 @@
                 setGeneratedStack(null);
                 
                 try {
-                    // Inicialización local para asegurar uso de process.env.API_KEY fresco
                     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
                     const response = await ai.models.generateContent({
                         model: 'gemini-3-flash-preview',
-                        contents: `Actúa como un experto en biohacking y farmacología nutricional. Genera una mezcla (stack) de suplementos sinérgica para el siguiente objetivo: "${stackGoal}". 
-                        Incluye dosis precisas basadas en estudios clínicos y justifica cada elección. 
-                        Responde estrictamente en formato JSON con esta estructura:
+                        contents: `Genera un stack de suplementos sinérgico para: "${stackGoal}". 
+                        Responde en JSON:
                         { 
-                          "title": "Nombre del Protocolo", 
-                          "description": "Resumen del enfoque",
-                          "items": [{"supplement": "Nombre", "dosage": "Dosis diaria", "timing": "Momento ideal", "reason": "Por qué se incluye"}],
-                          "precautions": "Contraindicaciones críticas"
+                          "title": "Nombre", 
+                          "description": "Resumen",
+                          "items": [{"supplement": "Nombre", "dosage": "Dosis", "timing": "Momento", "reason": "Justificación"}],
+                          "precautions": "Advertencias"
                         }`,
                         config: { responseMimeType: "application/json" }
                     });
-                    
-                    const result = JSON.parse(response.text);
-                    setGeneratedStack(result);
+                    setGeneratedStack(JSON.parse(response.text));
                 } catch (e) {
-                    console.error("Error en AI:", e);
-                    alert("Error en la conexión con el motor de IA. Por favor intenta de nuevo.");
+                    alert("Error con la IA. Verifica tu conexión.");
                 } finally {
                     setStackLoading(false);
                 }
@@ -175,18 +180,18 @@
                     <header className="glass-header sticky top-0 z-[100] border-b border-slate-200 py-4 px-6 shadow-sm">
                         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
                             <div className="flex items-center gap-3 cursor-pointer" onClick={() => {setSelectedCat(null); setSearch('');}}>
-                                <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-xl">
+                                <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-emerald-100">
                                     <i className="fa-solid fa-microscope text-2xl"></i>
                                 </div>
                                 <div>
-                                    <h1 className="text-xl font-[900] text-slate-900 leading-none uppercase tracking-tighter">SuppleMind <span className="text-emerald-600">AI</span></h1>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mt-1 leading-none">Biohacking Knowledge Base</p>
+                                    <h1 className="text-xl font-black text-slate-900 leading-none uppercase tracking-tighter">SuppleMind <span className="text-emerald-600">AI</span></h1>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mt-1">Ciencia de Suplementación</p>
                                 </div>
                             </div>
                             <div className="flex-1 max-w-2xl w-full relative">
                                 <input 
                                     type="text" 
-                                    placeholder="Busca: 'ánimo', 'insulina', 'testosterona', 'memoria'..."
+                                    placeholder="Busca por efecto o nombre (ej: 'ánimo', 'sueño', 'magnesio')..."
                                     className="w-full pl-12 pr-4 py-4 bg-slate-100 border-2 border-transparent rounded-2xl text-sm font-semibold focus:bg-white focus:border-emerald-500 transition-all outline-none"
                                     value={search}
                                     onChange={e => setSearch(e.target.value)}
@@ -198,21 +203,20 @@
 
                     <main className="max-w-7xl mx-auto px-6 pt-12">
                         {/* IA STACK GENERATOR */}
-                        <section className="mb-20 stack-dark-gradient rounded-[3.5rem] p-10 md:p-14 text-white shadow-2xl relative overflow-hidden">
+                        <section className="mb-20 stack-dark-gradient rounded-[3rem] p-10 md:p-14 text-white shadow-2xl relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 blur-[150px] rounded-full"></div>
                             <div className="relative z-10 max-w-2xl">
-                                <span className="inline-block px-4 py-1.5 bg-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-emerald-500/30 mb-8">Protocolo Maestro IA</span>
-                                <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">Optimización <span className="text-emerald-400 italic">Personalizada</span></h2>
-                                <p className="text-slate-400 text-sm mb-12 leading-relaxed font-medium">Define una necesidad (ej: "mejorar el ánimo y el sueño" o "maximizar recuperación muscular") y nuestra IA diseñará una mezcla científica.</p>
+                                <span className="inline-block px-4 py-1.5 bg-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-emerald-500/30 mb-8">Personalización Predictiva</span>
+                                <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">Crea tu <span className="text-emerald-400 italic">Protocolo Maestro</span></h2>
+                                <p className="text-slate-400 text-sm mb-12 leading-relaxed font-medium">Define tu objetivo (ej: "mejorar el ánimo y la fuerza física") y la IA diseñará una mezcla científica.</p>
                                 
                                 <div className="flex flex-col sm:flex-row gap-4">
                                     <input 
                                         type="text" 
-                                        placeholder="Tu objetivo o síntoma..."
+                                        placeholder="Tu objetivo de optimización..."
                                         className="flex-1 px-8 py-5 bg-white/5 border border-white/10 rounded-2xl text-lg focus:bg-white/10 focus:border-emerald-500 outline-none transition-all font-bold placeholder:text-slate-600"
                                         value={stackGoal}
                                         onChange={e => setStackGoal(e.target.value)}
-                                        onKeyDown={e => e.key === 'Enter' && handleGenerateStack()}
                                     />
                                     <button 
                                         onClick={handleGenerateStack}
@@ -220,7 +224,7 @@
                                         className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-10 py-5 rounded-2xl font-black transition-all flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50"
                                     >
                                         {stackLoading ? <i className="fa-solid fa-atom fa-spin"></i> : <i className="fa-solid fa-bolt"></i>}
-                                        DISEÑAR MEZCLA
+                                        GENERAR STACK
                                     </button>
                                 </div>
                             </div>
@@ -246,8 +250,7 @@
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="p-5 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-rose-400 text-[11px] font-bold uppercase tracking-widest text-center flex items-center justify-center gap-3">
-                                        <i className="fa-solid fa-triangle-exclamation"></i>
+                                    <div className="p-5 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-rose-400 text-[11px] font-bold uppercase tracking-widest text-center">
                                         Precaución: {generatedStack.precautions}
                                     </div>
                                 </div>
@@ -256,7 +259,7 @@
 
                         {/* CATEGORÍAS */}
                         <section className="mb-16">
-                            <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-10">Repositorio Biológico</h2>
+                            <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-10">Explorar Bio-Repositorio</h2>
                             <div className="category-grid">
                                 {CATEGORIES.map(cat => (
                                     <button 
@@ -277,12 +280,12 @@
                         <section className="pb-40">
                             <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 border-b border-slate-200 pb-10">
                                 <div>
-                                    <h2 className="text-5xl font-black text-slate-900 tracking-tighter">Directorio <span className="text-emerald-600 italic">Global</span></h2>
-                                    <p className="text-sm text-slate-400 font-bold mt-3">Compuestos farmacológicos, vitamínicos y minerales de grado clínico.</p>
+                                    <h2 className="text-5xl font-black text-slate-900 tracking-tighter">Directorio <span className="text-emerald-600 italic">Científico</span></h2>
+                                    <p className="text-sm text-slate-400 font-bold mt-3">Más de 60 compuestos analizados con dosis ideales comprobadas.</p>
                                 </div>
                                 <div className="bg-white px-8 py-5 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4">
                                     <span className="text-4xl font-black text-slate-900 tracking-tighter">{filtered.length}</span>
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight">Suplementos<br/>Documentados</span>
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-tight">Compuestos<br/>Activos</span>
                                 </div>
                             </div>
 
@@ -293,8 +296,8 @@
                             {filtered.length === 0 && (
                                 <div className="py-32 text-center bg-white rounded-[3rem] border-2 border-dashed border-slate-200">
                                     <i className="fa-solid fa-flask-vial text-6xl text-slate-100 mb-8"></i>
-                                    <h3 className="text-xl font-black text-slate-400 uppercase tracking-widest">Sin resultados locales</h3>
-                                    <p className="text-sm text-slate-300 font-medium">Prueba con el diseñador de IA o cambia los filtros.</p>
+                                    <h3 className="text-xl font-black text-slate-400 uppercase tracking-widest">Sin resultados</h3>
+                                    <p className="text-sm text-slate-300 font-medium">Usa términos como 'ánimo', 'fuerza' o el Generador IA.</p>
                                 </div>
                             )}
                         </section>
@@ -304,14 +307,13 @@
                         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-3">
                                 <i className="fa-solid fa-shield-halved text-emerald-500"></i>
-                                Propósito educativo. Consulte siempre con un profesional de la salud.
+                                Información estrictamente educativa. Consulte a su médico.
                             </p>
                             <div className="flex items-center gap-6">
                                 <div className="flex items-center gap-2">
                                     <div className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-tighter">Motor v7.2 Online</span>
+                                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-tighter">Database Pro v14.0</span>
                                 </div>
-                                <span className="text-[9px] font-black text-slate-900 bg-slate-100 px-4 py-2 rounded-full uppercase border border-slate-200">Database v12.0 Full</span>
                             </div>
                         </div>
                     </footer>
@@ -331,15 +333,15 @@
                                 {cat?.name}
                             </span>
                             <div className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-200 group-hover:text-emerald-500 transition-colors shadow-inner">
-                                <i className="fa-solid fa-microscope text-lg"></i>
+                                <i className="fa-solid fa-vial text-lg"></i>
                             </div>
                         </div>
                         
-                        <h3 className="text-2xl font-[900] text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors tracking-tight leading-tight">{supplement.name}</h3>
+                        <h3 className="text-2xl font-black text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors tracking-tight leading-tight">{supplement.name}</h3>
                         <p className="text-[13px] text-slate-500 font-medium mb-10 leading-relaxed line-clamp-3">{supplement.description}</p>
                         
                         <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 mb-8 min-h-[140px] flex flex-col justify-center">
-                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Efectos Comprobados</h4>
+                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Efectos Clínicos</h4>
                             <div className="space-y-3">
                                 {supplement.positiveEffects.slice(0, 3).map((e, i) => (
                                     <div key={i} className="flex items-start gap-3 text-[11px] font-bold text-slate-700 animate-fade-in leading-tight">
@@ -352,7 +354,7 @@
                         {open && (
                             <div className="animate-fade-in pt-6 border-t border-slate-100 space-y-8">
                                 <div>
-                                    <p className="text-[9px] font-black text-rose-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i className="fa-solid fa-circle-exclamation"></i> Posibles Efectos Secundarios</p>
+                                    <p className="text-[9px] font-black text-rose-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i className="fa-solid fa-circle-exclamation"></i> Advertencias</p>
                                     <div className="flex flex-wrap gap-2">
                                         {supplement.sideEffects.map((s, i) => (
                                             <span key={i} className="text-[10px] font-black bg-rose-50 text-rose-700 px-4 py-2 rounded-xl border border-rose-100 uppercase tracking-tighter">{s}</span>
@@ -374,7 +376,7 @@
                     </div>
                     
                     <button onClick={() => setOpen(!open)} className="w-full py-6 bg-slate-50 text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] hover:bg-emerald-600 hover:text-white transition-all flex items-center justify-center gap-3 active:scale-[0.98] outline-none">
-                        {open ? 'Ocultar Protocolo' : 'Investigación Completa'} 
+                        {open ? 'Ocultar Detalles' : 'Ver Ficha Completa'} 
                         <i className={`fa-solid fa-chevron-${open ? 'up' : 'down'} text-[8px]`}></i>
                     </button>
                 </div>
