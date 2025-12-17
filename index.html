@@ -13,6 +13,10 @@
         .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
+    <script>
+      // Shim para evitar ReferenceError: process is not defined en GitHub Pages
+      window.process = { env: { API_KEY: '' } };
+    </script>
 <script type="importmap">
 {
   "imports": {
@@ -26,7 +30,6 @@
 </head>
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
-    <!-- Script de entrada crucial para que la app funcione -->
     <script type="module" src="./index.tsx"></script>
 </body>
 </html>

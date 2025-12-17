@@ -1,5 +1,5 @@
 
-import { Category, CategoryId, Supplement } from './types';
+import { Category, CategoryId, Supplement } from './types.ts';
 
 export const CATEGORIES: Category[] = [
   {
@@ -61,28 +61,6 @@ export const CATEGORIES: Category[] = [
 ];
 
 export const INITIAL_SUPPLEMENTS: Supplement[] = [
-  // TELÓMEROS / REJUVENECIMIENTO
-  {
-    id: 'ta-65',
-    name: 'TA-65 (Extracto de Astragalus)',
-    description: 'Activador de telomerasa purificado derivado de la raíz de Astragalus membranaceus.',
-    category: CategoryId.REJUVENATION,
-    goals: ['Telómeros', 'Longevidad Celular'],
-    positiveEffects: [
-      'Activa la enzima telomerasa',
-      'Alarga telómeros cortos en células T',
-      'Mejora la respuesta inmune adaptativa',
-      'Mejora marcadores metabólicos',
-      'Protección celular avanzada',
-      'Promueve reparación de ADN'
-    ],
-    sideEffects: ['Seguro en dosis estudiadas', 'Posible interacción con inmunosupresores'],
-    minDose: '250 Unidades/día',
-    idealDose: '500 - 1000 Unidades/día',
-    timing: 'En ayunas o lejos de las comidas',
-    source: 'local'
-  },
-  // HORMONALES HOMBRES / ANGIOGÉNESIS / ERECCIÓN
   {
     id: 'bpc-157-oral',
     name: 'BPC-157 (Cápsulas Arginato)',
@@ -96,7 +74,7 @@ export const INITIAL_SUPPLEMENTS: Supplement[] = [
       'Efecto citoprotector sistémico',
       'Mejora la microcirculación local'
     ],
-    sideEffects: ['Pocos efectos secundarios reportados en dosis terapéuticas', 'Investigación en humanos aún emergente'],
+    sideEffects: ['Investigación en humanos aún emergente'],
     minDose: '200mcg/día',
     idealDose: '500mcg/día',
     timing: 'Con o sin comida',
@@ -107,7 +85,7 @@ export const INITIAL_SUPPLEMENTS: Supplement[] = [
     name: 'Icariina (Horny Goat Weed 60%)',
     description: 'Fitoestrógeno que actúa como inhibidor suave de la PDE5 y promueve la síntesis de óxido nítrico.',
     category: CategoryId.HORMONAL_MEN,
-    goals: ['Libido', 'Erección', 'Testosterona', 'Salud Cardiovascular'],
+    goals: ['Libido', 'Erección', 'Testosterona', 'Salud Cardiovascular', 'Angiogénesis'],
     positiveEffects: [
       'Mejora la dureza y calidad de la erección',
       'Aumenta la expresión de eNOS (óxido nítrico)',
@@ -115,69 +93,28 @@ export const INITIAL_SUPPLEMENTS: Supplement[] = [
       'Neuroprotección vascular',
       'Soporte a la densidad ósea'
     ],
-    sideEffects: ['Aumento de la frecuencia cardíaca', 'Sed excesiva'],
-    minDose: '250mg (extracto estandarizado)',
+    sideEffects: ['Aumento de la frecuencia cardíaca'],
+    minDose: '250mg',
     idealDose: '500mg - 750mg/día',
-    timing: 'Mañana o antes de la actividad',
-    source: 'local'
-  },
-  {
-    id: 'l-citrulline-pure',
-    name: 'L-Citrulina Malato (2:1)',
-    description: 'Precursor de arginina para la vasodilatación masiva.',
-    category: CategoryId.PHYSICAL_PERFORMANCE,
-    goals: ['Vasodilatación', 'Resistencia', 'Erección', 'Salud Cardiovascular'],
-    positiveEffects: [
-      'Optimiza el flujo sanguíneo cavernoso',
-      'Mejora la dureza eréctil',
-      'Aumenta la resistencia al ejercicio',
-      'Reduce el dolor muscular',
-      'Aumenta la síntesis de óxido nítrico'
-    ],
-    sideEffects: ['Malestar gástrico leve'],
-    minDose: '3000mg/día',
-    idealDose: '6000mg - 8000mg/día',
-    timing: '45-60 min antes de la actividad',
-    source: 'local'
-  },
-  // NOOTRÓPICOS
-  {
-    id: 'lions-mane',
-    name: 'Melena de León (Hericium erinaceus)',
-    description: 'Hongo que estimula el factor de crecimiento nervioso (NGF).',
-    category: CategoryId.NOOTROPICS,
-    goals: ['Memoria', 'Neuroplasticidad', 'Enfoque'],
-    positiveEffects: [
-      'Mejora memoria a corto plazo',
-      'Reparación neuronal activa',
-      'Reduce niebla mental',
-      'Protección contra neurodegeneración',
-      'Mejora estado de ánimo'
-    ],
-    sideEffects: ['Alergias'],
-    minDose: '500mg/día',
-    idealDose: '1000mg - 3000mg/día',
     timing: 'Mañana',
     source: 'local'
   },
-  // METABOLISMO
   {
-    id: 'berberine-hcl',
-    name: 'Berberina HCl',
-    description: 'Activador de AMPK y optimizador de glucosa.',
-    category: CategoryId.METABOLISM,
-    goals: ['Sensibilidad Insulina', 'Activación AMPK', 'Quema de Grasa'],
+    id: 'ta-65',
+    name: 'TA-65 (Extracto de Astragalus)',
+    description: 'Activador de telomerasa purificado para longevidad celular.',
+    category: CategoryId.REJUVENATION,
+    goals: ['Telómeros', 'Longevidad Celular'],
     positiveEffects: [
-      'Control glucémico potente',
-      'Optimización lipídica (colesterol)',
-      'Pérdida de grasa visceral',
-      'Activación de vías de longevidad',
-      'Salud intestinal'
+      'Activa la enzima telomerasa',
+      'Alarga telómeros cortos',
+      'Mejora la respuesta inmune',
+      'Protección celular avanzada'
     ],
-    sideEffects: ['Estreñimiento'],
-    minDose: '500mg/día',
-    idealDose: '1500mg/día',
-    timing: 'Antes de comidas ricas en carbohidratos',
+    sideEffects: ['Seguro en dosis estudiadas'],
+    minDose: '250 Unidades',
+    idealDose: '500 - 1000 Unidades',
+    timing: 'En ayunas',
     source: 'local'
   }
 ];
