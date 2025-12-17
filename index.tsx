@@ -1,16 +1,4 @@
 
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
-
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
-}
-
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// El código ha sido movido a index.html para asegurar la compatibilidad con GitHub Pages.
+// Esto previene errores de MIME type (text/plain) al intentar cargar archivos .tsx directamente.
+console.log("SuppleMind iniciado desde index.html.");
