@@ -1,4 +1,14 @@
 
-// El código ha sido movido a index.html para asegurar la compatibilidad con GitHub Pages.
-// Esto previene errores de MIME type (text/plain) al intentar cargar archivos .tsx directamente.
-console.log("SuppleMind iniciado desde index.html.");
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Failed to find the root element');
+
+const root = createRoot(rootElement);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
