@@ -18,17 +18,17 @@
     </style>
 
     <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18.2.0?bundle",
-    "react-dom": "https://esm.sh/react-dom@18.2.0?bundle&deps=react@18.2.0",
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?bundle&deps=react@18.2.0",
-    "@google/genai": "https://esm.sh/@google/genai@1.34.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react/": "https://esm.sh/react@18.2.0/",
+        "react-dom": "https://esm.sh/react-dom@18.2.0?deps=react@18.2.0",
+        "react-dom/": "https://esm.sh/react-dom@18.2.0/",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?deps=react@18.2.0",
+        "@google/genai": "https://esm.sh/@google/genai@1.34.0"
+      }
+    }
+    </script>
     
     <script>
       window.onerror = function(msg, url, line, col, error) {
@@ -40,9 +40,9 @@
             <div style="max-width: 400px; margin: auto; font-family: sans-serif; text-align: center;">
               <i class="fa-solid fa-triangle-exclamation" style="font-size: 48px; color: #ef4444; margin-bottom: 20px;"></i>
               <h1 style="font-weight: 900; color: #3a2a1f; margin-bottom: 10px;">Error de Sincronización</h1>
-              <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">No se pudo inicializar el núcleo bioactivo. Esto puede deberse a la caché del navegador o a un error de red.</p>
+              <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">No se pudo inicializar el núcleo bioactivo. Este error (#31) suele ocurrir por un conflicto de versiones de React.</p>
               <code style="display: block; background: #f1f5f9; padding: 15px; border-radius: 8px; font-size: 11px; text-align: left; overflow: auto; margin-bottom: 20px; color: #ef4444;">${msg}</code>
-              <button onclick="window.location.reload(true)" style="background: #3a2a1f; color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer;">Forzar Reinicio</button>
+              <button onclick="window.location.reload(true)" style="background: #3a2a1f; color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer;">Limpiar y Reintentar</button>
             </div>
           `;
         }
