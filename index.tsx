@@ -6,7 +6,9 @@ import App from './App.tsx';
 const container = document.getElementById('root');
 if (container) {
   const root = createRoot(container);
-  root.render(<App />);
-} else {
-  console.error("Critical: Root container not found");
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 }

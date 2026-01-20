@@ -2,44 +2,32 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { GeneratedStack, Supplement, CategoryId } from "./types.ts";
 
-const getApiKey = () => {
-  try {
-    return process.env.API_KEY || '';
-  } catch (e) {
-    return '';
-  }
-};
-
-const ai = new GoogleGenAI({ apiKey: getApiKey() });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
 
 export interface AISearchResult {
   supplements: Supplement[];
   sources: { title: string; uri: string }[];
 }
 
-const validateSupplement = (s: any): Supplement => {
-  return {
-    id: String(s.id || Math.random().toString(36).substr(2, 9)),
-    name: String(s.name || 'Sin nombre'),
-    description: String(s.description || 'Sin descripción'),
-    category: (Object.values(CategoryId).includes(s.category as CategoryId) ? s.category : CategoryId.REJUVENATION) as CategoryId,
-    goals: Array.isArray(s.goals) ? s.goals.map(String) : [],
-    positiveEffects: Array.isArray(s.positiveEffects) ? s.positiveEffects.map(String) : [],
-    sideEffects: Array.isArray(s.sideEffects) ? s.sideEffects.map(String) : [],
-    minDose: String(s.minDose || 'No especificada'),
-    idealDose: String(s.idealDose || 'No especificada'),
-    timing: String(s.timing || 'No especificado'),
-    source: 'ai'
-  };
-};
+const validateSupplement = (s: any): Supplement => ({
+  id: String(s.id || Math.random().toString(36).substr(2, 9)),
+  name: String(s.name || 'Suplemento nuevo'),
+  description: String(s.description || 'Sin descripción disponible.'),
+  category: (Object.values(CategoryId).includes(s.category as CategoryId) ? s.category : CategoryId.REJUVENATION) as CategoryId,
+  goals: Array.isArray(s.goals) ? s.goals.map(String) : [],
+  positiveEffects: Array.isArray(s.positiveEffects) ? s.positiveEffects.map(String) : [],
+  sideEffects: Array.isArray(s.sideEffects) ? s.sideEffects.map(String) : [],
+  minDose: String(s.minDose || 'Consultar especialista'),
+  idealDose: String(s.idealDose || 'No definida'),
+  timing: String(s.timing || 'Mañana'),
+  source: 'ai'
+});
 
 export const searchSupplementsAI = async (query: string): Promise<AISearchResult> => {
-  const model = 'gemini-3-flash-preview'; 
   try {
     const response = await ai.models.generateContent({
-      model,
-      contents: `Investiga suplementos para: "${query}". Responde solo JSON.
-      Categorías: rejuvenecimiento, hormonales-hombres, hormonales-mujeres, antioxidantes, nootropicos, desempeno-fisico, inmunidad, metabolismo.`,
+      model: 'gemini-3-flash-preview',
+      contents: `Investiga suplementos reales y nuevos descubrimientos para: "${query}". Responde solo JSON.`,
       config: {
         tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
@@ -51,18 +39,15 @@ export const searchSupplementsAI = async (query: string): Promise<AISearchResult
               items: {
                 type: Type.OBJECT,
                 properties: {
-                  id: { type: Type.STRING },
                   name: { type: Type.STRING },
                   description: { type: Type.STRING },
                   category: { type: Type.STRING },
                   goals: { type: Type.ARRAY, items: { type: Type.STRING } },
                   positiveEffects: { type: Type.ARRAY, items: { type: Type.STRING } },
-                  sideEffects: { type: Type.ARRAY, items: { type: Type.STRING } },
-                  minDose: { type: Type.STRING },
                   idealDose: { type: Type.STRING },
                   timing: { type: Type.STRING }
                 },
-                required: ["id", "name", "description", "category"]
+                required: ["name", "description"]
               }
             }
           }
@@ -70,31 +55,28 @@ export const searchSupplementsAI = async (query: string): Promise<AISearchResult
       }
     });
 
-    const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
-    const sources = Array.isArray(groundingChunks) 
-      ? groundingChunks
-          .map((chunk: any) => ({
-            title: chunk?.web?.title || 'Fuente Científica',
-            uri: chunk?.web?.uri || '#'
-          }))
-          .filter(s => s.uri !== '#')
-      : [];
+    const sources = response.candidates?.[0]?.groundingMetadata?.groundingChunks
+      ?.map((chunk: any) => ({
+        title: chunk?.web?.title || 'Fuente científica',
+        uri: chunk?.web?.uri || '#'
+      })).filter((s: any) => s.uri !== '#') || [];
 
-    const rawData = JSON.parse(response.text || "{}");
-    const validatedSupps = (rawData.supplements || []).map(validateSupplement);
-    return { supplements: validatedSupps, sources };
+    const rawData = JSON.parse(response.text || "{\"supplements\":[]}");
+    return { 
+      supplements: (rawData.supplements || []).map(validateSupplement), 
+      sources 
+    };
   } catch (e) {
-    console.error("AI Search Failed:", e);
+    console.error("AI Search Error:", e);
     return { supplements: [], sources: [] };
   }
 };
 
 export const generateStackAI = async (goal: string): Promise<GeneratedStack> => {
-  const model = 'gemini-3-flash-preview';
   try {
     const response = await ai.models.generateContent({
-      model,
-      contents: `Diseña un stack para: "${goal}". Responde solo JSON.`,
+      model: 'gemini-3-flash-preview',
+      contents: `Diseña un protocolo científico (stack) para: "${goal}". Responde solo JSON.`,
       config: {
         tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
@@ -120,10 +102,8 @@ export const generateStackAI = async (goal: string): Promise<GeneratedStack> => 
         }
       }
     });
-
-    return JSON.parse(response.text || "{}") as GeneratedStack;
+    return JSON.parse(response.text || "{}");
   } catch (e) {
-    console.error("Stack Generation Failed:", e);
-    throw new Error("Error al generar el stack.");
+    throw new Error("No se pudo generar el protocolo.");
   }
 };
