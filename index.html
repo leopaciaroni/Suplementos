@@ -31,19 +31,18 @@
     </script>
     
     <script>
-      // Captura de errores críticos antes de que React cargue
       window.onerror = function(msg, url, line, col, error) {
-        console.error("Critical Load Error:", msg, error);
+        console.error("System Error:", msg, error);
         const errDiv = document.getElementById('root-error');
         if (errDiv) {
           errDiv.style.display = 'flex';
           errDiv.innerHTML = `
-            <div style="max-width: 400px; margin: auto;">
+            <div style="max-width: 400px; margin: auto; font-family: sans-serif;">
               <i class="fa-solid fa-triangle-exclamation" style="font-size: 48px; color: #ef4444; margin-bottom: 20px;"></i>
-              <h1 style="font-weight: 900; color: #3a2a1f;">Error de Carga</h1>
-              <p style="color: #64748b; font-size: 14px; margin: 10px 0;">No se pudo iniciar el sistema de bio-optimización.</p>
-              <code style="display: block; background: #f1f5f9; padding: 10px; border-radius: 8px; font-size: 10px; text-align: left; overflow: auto;">${msg}</code>
-              <button onclick="window.location.reload()" style="margin-top: 20px; background: #3a2a1f; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer;">Reintentar</button>
+              <h1 style="font-weight: 900; color: #3a2a1f;">Error Crítico de Carga</h1>
+              <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">Hubo un problema al inicializar el núcleo de Evolutra.</p>
+              <code style="display: block; background: #f1f5f9; padding: 15px; border-radius: 8px; font-size: 11px; text-align: left; overflow: auto; margin-bottom: 20px;">${msg}</code>
+              <button onclick="window.location.reload()" style="background: #3a2a1f; color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;">Reiniciar Sistema</button>
             </div>
           `;
         }
