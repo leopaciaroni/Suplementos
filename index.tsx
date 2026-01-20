@@ -3,13 +3,21 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 
-console.log("EVOLUTRA: Mount sequence initiated.");
+console.log("EVOLUTRA [System]: Booting engine...");
 
-const container = document.getElementById('root');
+const init = () => {
+  const container = document.getElementById('root');
+  if (container) {
+    console.log("EVOLUTRA [System]: DOM Container located. Mounting React...");
+    const root = createRoot(container);
+    root.render(<App />);
+  } else {
+    console.error("EVOLUTRA [System]: CRITICAL ERROR - Mount point #root not found.");
+  }
+};
 
-if (container) {
-  const root = createRoot(container);
-  root.render(<App />);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
 } else {
-  console.error("Critical Error: 'root' element not found in DOM.");
+  init();
 }

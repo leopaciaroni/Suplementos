@@ -11,11 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        body { margin: 0; padding: 0; overflow-x: hidden; font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        body { margin: 0; padding: 0; overflow-x: hidden; font-family: 'Inter', sans-serif; background-color: #fdfdfb; }
         .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        #root-error { display: none; position: fixed; inset: 0; background: white; z-index: 10000; padding: 40px; text-align: center; }
     </style>
 
     <script type="importmap">
@@ -30,17 +29,40 @@
       }
     }
     </script>
+    
+    <script>
+      // Captura de errores críticos antes de que React cargue
+      window.onerror = function(msg, url, line, col, error) {
+        console.error("Critical Load Error:", msg, error);
+        const errDiv = document.getElementById('root-error');
+        if (errDiv) {
+          errDiv.style.display = 'flex';
+          errDiv.innerHTML = `
+            <div style="max-width: 400px; margin: auto;">
+              <i class="fa-solid fa-triangle-exclamation" style="font-size: 48px; color: #ef4444; margin-bottom: 20px;"></i>
+              <h1 style="font-weight: 900; color: #3a2a1f;">Error de Carga</h1>
+              <p style="color: #64748b; font-size: 14px; margin: 10px 0;">No se pudo iniciar el sistema de bio-optimización.</p>
+              <code style="display: block; background: #f1f5f9; padding: 10px; border-radius: 8px; font-size: 10px; text-align: left; overflow: auto;">${msg}</code>
+              <button onclick="window.location.reload()" style="margin-top: 20px; background: #3a2a1f; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer;">Reintentar</button>
+            </div>
+          `;
+        }
+      };
+    </script>
 </head>
 <body>
+    <div id="root-error" style="display:none; align-items: center; justify-content: center; height: 100vh; flex-direction: column;"></div>
+    
     <div id="root">
         <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; color: #3a2a1f; background: #fdfdfb;">
             <div style="width: 60px; height: 60px; background: #3a2a1f; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);">
                 <i class="fa-solid fa-leaf" style="color: #34d399; font-size: 24px;"></i>
             </div>
-            <div style="font-weight: 900; letter-spacing: -0.05em; font-size: 24px;">EVOLUTRA</div>
-            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: #10b981; margin-top: 5px;">Iniciando sistema...</div>
+            <div style="font-weight: 900; letter-spacing: -0.05em; font-size: 24px; color: #3a2a1f;">EVOLUTRA</div>
+            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: #10b981; margin-top: 5px;">Sincronizando protocolos...</div>
         </div>
     </div>
+    
     <script type="module" src="index.tsx"></script>
 </body>
 </html>
