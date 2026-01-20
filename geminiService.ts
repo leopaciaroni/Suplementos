@@ -17,7 +17,6 @@ export interface AISearchResult {
   sources: { title: string; uri: string }[];
 }
 
-// Simple schema validation utility
 const validateSupplement = (s: any): Supplement => {
   return {
     id: String(s.id || Math.random().toString(36).substr(2, 9)),
@@ -39,26 +38,8 @@ export const searchSupplementsAI = async (query: string): Promise<AISearchResult
   try {
     const response = await ai.models.generateContent({
       model,
-      contents: `Investiga profundamente sobre suplementos para: "${query}". Responde exclusivamente en JSON válido.
-      Categorías permitidas: rejuvenecimiento, hormonales-hombres, hormonales-mujeres, antioxidantes, nootropicos, desempeno-fisico, inmunidad, metabolismo.
-      
-      Estructura JSON:
-      {
-        "supplements": [
-          {
-            "id": "slug-unico",
-            "name": "Nombre",
-            "description": "Análisis profundo",
-            "category": "nootropicos",
-            "goals": ["mejora enfoque"],
-            "positiveEffects": ["neuroprotección"],
-            "sideEffects": ["insomnio"],
-            "minDose": "100mg",
-            "idealDose": "200mg",
-            "timing": "mañana"
-          }
-        ]
-      }`,
+      contents: `Investiga suplementos para: "${query}". Responde solo JSON.
+      Categorías: rejuvenecimiento, hormonales-hombres, hormonales-mujeres, antioxidantes, nootropicos, desempeno-fisico, inmunidad, metabolismo.`,
       config: {
         tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
@@ -81,11 +62,10 @@ export const searchSupplementsAI = async (query: string): Promise<AISearchResult
                   idealDose: { type: Type.STRING },
                   timing: { type: Type.STRING }
                 },
-                required: ["id", "name", "description", "category", "positiveEffects"]
+                required: ["id", "name", "description", "category"]
               }
             }
-          },
-          required: ["supplements"]
+          }
         }
       }
     });
@@ -101,12 +81,8 @@ export const searchSupplementsAI = async (query: string): Promise<AISearchResult
       : [];
 
     const rawData = JSON.parse(response.text || "{}");
-    if (!rawData.supplements || !Array.isArray(rawData.supplements)) {
-      throw new Error("Invalid structure from AI");
-    }
-
-    const validatedSupps = rawData.supplements.map(validateSupplement);
-    return { supplements: validatedSupps, sources: sources };
+    const validatedSupps = (rawData.supplements || []).map(validateSupplement);
+    return { supplements: validatedSupps, sources };
   } catch (e) {
     console.error("AI Search Failed:", e);
     return { supplements: [], sources: [] };
@@ -114,20 +90,11 @@ export const searchSupplementsAI = async (query: string): Promise<AISearchResult
 };
 
 export const generateStackAI = async (goal: string): Promise<GeneratedStack> => {
-  const model = 'gemini-3-pro-preview';
+  const model = 'gemini-3-flash-preview';
   try {
     const response = await ai.models.generateContent({
       model,
-      contents: `Diseña un stack de suplementos sinérgico para este objetivo: "${goal}". 
-      Formato JSON obligatorio:
-      {
-        "title": "Nombre del Stack",
-        "description": "Fundamento biológico",
-        "items": [
-          { "supplement": "Nombre", "dosage": "Dosis", "timing": "Momento", "reason": "Por qué incluirlo" }
-        ],
-        "precautions": "Alertas de seguridad"
-      }`,
+      contents: `Diseña un stack para: "${goal}". Responde solo JSON.`,
       config: {
         tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
@@ -145,37 +112,18 @@ export const generateStackAI = async (goal: string): Promise<GeneratedStack> => 
                   dosage: { type: Type.STRING },
                   timing: { type: Type.STRING },
                   reason: { type: Type.STRING }
-                },
-                required: ["supplement", "dosage", "reason"]
+                }
               }
             },
             precautions: { type: Type.STRING }
-          },
-          required: ["title", "description", "items", "precautions"]
+          }
         }
       }
     });
 
-    const data = JSON.parse(response.text || "{}");
-    
-    // Strict structural check
-    if (!data.title || !data.items || !Array.isArray(data.items)) {
-      throw new Error("Malformed stack response");
-    }
-
-    return {
-      title: String(data.title),
-      description: String(data.description || 'Mezcla optimizada'),
-      items: data.items.map((it: any) => ({
-        supplement: String(it.supplement),
-        dosage: String(it.dosage),
-        timing: String(it.timing || 'Indistinto'),
-        reason: String(it.reason)
-      })),
-      precautions: String(data.precautions || 'Consultar con un especialista.')
-    };
+    return JSON.parse(response.text || "{}") as GeneratedStack;
   } catch (e) {
     console.error("Stack Generation Failed:", e);
-    throw new Error("No se pudo generar el protocolo. Inténtalo de nuevo.");
+    throw new Error("Error al generar el stack.");
   }
 };
