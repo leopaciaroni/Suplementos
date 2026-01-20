@@ -18,35 +18,35 @@
     </style>
 
     <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@18.2.0?bundle",
-        "react/": "https://esm.sh/react@18.2.0/",
-        "react-dom": "https://esm.sh/react-dom@18.2.0?bundle&deps=react@18.2.0",
-        "react-dom/": "https://esm.sh/react-dom@18.2.0/",
-        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?bundle&deps=react@18.2.0",
-        "@google/genai": "https://esm.sh/@google/genai@1.34.0"
-      }
-    }
-    </script>
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "@google/genai": "https://esm.sh/@google/genai@1.34.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
     
     <script>
       window.onerror = function(msg, url, line, col, error) {
-        console.error("System Error Catch:", msg, error);
+        console.error("Critical System Error:", msg, error);
         const errDiv = document.getElementById('root-error');
         if (errDiv) {
           errDiv.style.display = 'flex';
           errDiv.innerHTML = `
             <div style="max-width: 500px; padding: 2.5rem; background: white; border-radius: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2); border: 1px solid #f1f5f9;">
               <div style="width: 72px; height: 72px; background: #fee2e2; border-radius: 1.5rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-                <i class="fa-solid fa-microchip" style="font-size: 28px; color: #ef4444;"></i>
+                <i class="fa-solid fa-flask-vial" style="font-size: 28px; color: #ef4444;"></i>
               </div>
-              <h1 style="font-weight: 900; color: #3a2a1f; margin-bottom: 0.75rem; font-size: 1.75rem; letter-spacing: -0.02em;">Error de Sincronización</h1>
-              <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;">Se ha detectado una incompatibilidad en los módulos de renderizado. Por favor, limpia la caché del navegador o pulsa el botón inferior.</p>
+              <h1 style="font-weight: 900; color: #3a2a1f; margin-bottom: 0.75rem; font-size: 1.75rem; letter-spacing: -0.02em;">Error de Inicialización</h1>
+              <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;">El motor de renderizado no pudo sincronizarse. Esto ocurre frecuentemente por conflictos de versiones de bibliotecas o caché antigua.</p>
               <div style="background: #f8fafc; padding: 1.25rem; border-radius: 1rem; margin-bottom: 1.5rem; text-align: left; max-height: 150px; overflow-y: auto;">
                 <code style="font-size: 0.75rem; color: #ef4444; font-family: monospace; white-space: pre-wrap;">${msg}</code>
               </div>
-              <button onclick="window.location.reload(true)" style="background: #3a2a1f; color: white; border: none; padding: 1rem 2rem; border-radius: 1.25rem; font-weight: 800; cursor: pointer; width: 100%; transition: transform 0.2s; box-shadow: 0 10px 15px -3px rgba(58, 42, 31, 0.3);">FORZAR REINICIO DEL NÚCLEO</button>
+              <button onclick="window.location.reload(true)" style="background: #3a2a1f; color: white; border: none; padding: 1rem 2rem; border-radius: 1.25rem; font-weight: 800; cursor: pointer; width: 100%;">REINTENTAR ACCESO</button>
             </div>
           `;
         }
@@ -58,20 +58,14 @@
     
     <div id="root">
         <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; color: #3a2a1f; background: #fdfdfb;">
-            <div style="position: relative;">
-                <div style="width: 80px; height: 80px; background: #3a2a1f; border-radius: 2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); transform: rotate(-5deg); transition: transform 0.5s ease-in-out;">
-                    <i class="fa-solid fa-leaf" style="color: #34d399; font-size: 32px;"></i>
-                </div>
-                <div style="position: absolute; -right: 12px; -bottom: 12px; width: 32px; height: 32px; background: #34d399; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 4px solid #fdfdfb; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-                    <i class="fa-solid fa-atom fa-spin" style="color: white; font-size: 14px;"></i>
-                </div>
+            <div style="width: 80px; height: 80px; background: #3a2a1f; border-radius: 2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); transform: rotate(-5deg);">
+                <i class="fa-solid fa-leaf" style="color: #34d399; font-size: 32px;"></i>
             </div>
             <div style="font-weight: 900; letter-spacing: -0.05em; font-size: 36px; color: #3a2a1f; margin-top: 2rem;">EVOLUTRA</div>
-            <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4em; color: #10b981; margin-top: 12px; animation: pulse 2s infinite;">ESTABILIZANDO SISTEMA...</div>
+            <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4em; color: #10b981; margin-top: 12px;">Cargando protocolos biológicos...</div>
         </div>
     </div>
     
     <script type="module" src="index.tsx"></script>
-    <style>@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }</style>
 </body>
 </html>
